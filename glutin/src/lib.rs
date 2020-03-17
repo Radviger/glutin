@@ -343,7 +343,7 @@ impl CreationError {
                 "The requested OpenGL version is not supported."
             }
             CreationError::NoAvailablePixelFormat(ref err) => {
-                &format!("Couldn't find any pixel format that matches the criteria: {}", err)
+                "Couldn't find any pixel format that matches the criteria."
             }
             CreationError::PlatformSpecific(ref text) => &text,
             CreationError::Window(ref err) => {
