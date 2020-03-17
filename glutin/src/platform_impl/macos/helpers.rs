@@ -111,7 +111,7 @@ pub fn build_nsattributes(
     }
 
     if pf_reqs.release_behavior != ReleaseBehavior::Flush {
-        return Err(CreationError::NoAvailablePixelFormat);
+        return Err(CreationError::NoAvailablePixelFormat(String::from("release_behavior != ReleaseBehavior::Flush")));
     }
 
     if pf_reqs.stereoscopy {

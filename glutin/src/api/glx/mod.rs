@@ -661,7 +661,7 @@ unsafe fn choose_fbconfig(
             if check_ext(extensions, "GLX_ARB_fbconfig_float") {
                 out.push(ffi::glx_extra::RGBA_FLOAT_BIT_ARB as raw::c_int);
             } else {
-                return Err(CreationError::NoAvailablePixelFormat);
+                return Err(CreationError::NoAvailablePixelFormat(String::from("no GLX_ARB_fbconfig_float")));
             }
         } else {
             out.push(ffi::glx::RGBA_BIT as raw::c_int);
@@ -706,7 +706,7 @@ unsafe fn choose_fbconfig(
                 out.push(ffi::glx_extra::SAMPLES_ARB as raw::c_int);
                 out.push(multisampling as raw::c_int);
             } else {
-                return Err(CreationError::NoAvailablePixelFormat);
+                return Err(CreationError::NoAvailablePixelFormat(String::from("no GLX_ARB_multisample")));
             }
         }
 
@@ -725,7 +725,7 @@ unsafe fn choose_fbconfig(
                 );
                 out.push(1);
             } else {
-                return Err(CreationError::NoAvailablePixelFormat);
+                return Err(CreationError::NoAvailablePixelFormat(String::from("no GLX_ARB_framebuffer_sRGB nor GLX_EXT_framebuffer_sRGB")));
             }
         }
 
@@ -765,10 +765,10 @@ unsafe fn choose_fbconfig(
             &mut num_configs,
         );
         if configs.is_null() {
-            return Err(CreationError::NoAvailablePixelFormat);
+            return Err(CreationError::NoAvailablePixelFormat(String::from("configs null")));
         }
         if num_configs == 0 {
-            return Err(CreationError::NoAvailablePixelFormat);
+            return Err(CreationError::NoAvailablePixelFormat(String::from("num_configs (2) == 0")));
         }
 
         match crate::platform_impl::x11_utils::select_config(
@@ -801,7 +801,7 @@ unsafe fn choose_fbconfig(
             }
             Err(()) => {
                 (xconn.xlib.XFree)(configs as *mut _);
-                return Err(CreationError::NoAvailablePixelFormat);
+                return Err(CreationError::NoAvailablePixelFormat(String::from("glx none")));
             }
         }
     };

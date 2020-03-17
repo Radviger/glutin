@@ -79,7 +79,7 @@ impl Context {
                     .initWithAttributes_(&attributes),
             );
             let pixel_format = match pixel_format.non_nil() {
-                None => return Err(CreationError::NoAvailablePixelFormat),
+                None => return Err(CreationError::NoAvailablePixelFormat(String::from("pixel_format none"))),
                 Some(pf) => pf,
             };
 

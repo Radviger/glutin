@@ -303,7 +303,7 @@ pub enum CreationError {
     NoBackendAvailable(Box<dyn std::error::Error + Send + Sync>),
     RobustnessNotSupported,
     OpenGlVersionNotSupported,
-    NoAvailablePixelFormat,
+    NoAvailablePixelFormat(String),
     PlatformSpecific(String),
     Window(OsError),
     /// We received multiple errors, instead of one.
@@ -342,8 +342,8 @@ impl CreationError {
             CreationError::OpenGlVersionNotSupported => {
                 "The requested OpenGL version is not supported."
             }
-            CreationError::NoAvailablePixelFormat => {
-                "Couldn't find any pixel format that matches the criteria."
+            CreationError::NoAvailablePixelFormat(ref err) => {
+                &format!("Couldn't find any pixel format that matches the criteria: {}", err)
             }
             CreationError::PlatformSpecific(ref text) => &text,
             CreationError::Window(ref err) => {

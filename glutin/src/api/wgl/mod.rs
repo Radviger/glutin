@@ -120,10 +120,10 @@ impl Context {
                     hdc,
                     pf_reqs,
                 )
-                .map_err(|_| CreationError::NoAvailablePixelFormat)?
+                .map_err(|_| CreationError::NoAvailablePixelFormat(String::from("pixel_format_id == 0 id err")))?
             } else {
                 choose_native_pixel_format_id(hdc, pf_reqs)
-                    .map_err(|_| CreationError::NoAvailablePixelFormat)?
+                    .map_err(|_| CreationError::NoAvailablePixelFormat(String::from("choose_native_pixel_format_id err")))?
             };
 
             set_pixel_format(hdc, id)?;
@@ -137,10 +137,10 @@ impl Context {
                 hdc,
                 pixel_format_id,
             )
-            .map_err(|_| CreationError::NoAvailablePixelFormat)?
+            .map_err(|_| CreationError::NoAvailablePixelFormat(String::from("choose_arb_pixel_format err")))?
         } else {
             choose_native_pixel_format(hdc, pf_reqs, pixel_format_id)
-                .map_err(|_| CreationError::NoAvailablePixelFormat)?
+                .map_err(|_| CreationError::NoAvailablePixelFormat(String::from("choose_native_pixel_format err")))?
         };
 
         // creating the OpenGL context

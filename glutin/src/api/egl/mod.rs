@@ -1156,7 +1156,7 @@ where
         match (api, version) {
             (Api::OpenGlEs, Some((3, _))) => {
                 if egl_version < &(1, 3) {
-                    return Err(CreationError::NoAvailablePixelFormat);
+                    return Err(CreationError::NoAvailablePixelFormat(format!("3. es egl version {} < 1.3", egl_version)));
                 }
                 out.push(ffi::egl::RENDERABLE_TYPE as raw::c_int);
                 out.push(ffi::egl::OPENGL_ES3_BIT as raw::c_int);
@@ -1165,7 +1165,7 @@ where
             }
             (Api::OpenGlEs, Some((2, _))) => {
                 if egl_version < &(1, 3) {
-                    return Err(CreationError::NoAvailablePixelFormat);
+                    return Err(CreationError::NoAvailablePixelFormat(format!("2. es egl version {} < 1.3", egl_version)));
                 }
                 out.push(ffi::egl::RENDERABLE_TYPE as raw::c_int);
                 out.push(ffi::egl::OPENGL_ES2_BIT as raw::c_int);
@@ -1183,7 +1183,7 @@ where
             (Api::OpenGlEs, _) => unimplemented!(),
             (Api::OpenGl, _) => {
                 if egl_version < &(1, 3) {
-                    return Err(CreationError::NoAvailablePixelFormat);
+                    return Err(CreationError::NoAvailablePixelFormat(format!("gl egl version {} < 1.3", egl_version)));
                 }
                 out.push(ffi::egl::RENDERABLE_TYPE as raw::c_int);
                 out.push(ffi::egl::OPENGL_BIT as raw::c_int);
@@ -1231,7 +1231,7 @@ where
         }
 
         if let Some(true) = pf_reqs.double_buffer {
-            return Err(CreationError::NoAvailablePixelFormat);
+            return Err(CreationError::NoAvailablePixelFormat(String::from("double_buffer: true")));
         }
 
         if let Some(multisampling) = pf_reqs.multisampling {
@@ -1240,7 +1240,7 @@ where
         }
 
         if pf_reqs.stereoscopy {
-            return Err(CreationError::NoAvailablePixelFormat);
+            return Err(CreationError::NoAvailablePixelFormat(String::from("stereoscopy: true")));
         }
 
         if let Some(xid) = pf_reqs.x11_visual_xid {
@@ -1278,7 +1278,7 @@ where
     }
 
     if num_configs == 0 {
-        return Err(CreationError::NoAvailablePixelFormat);
+        return Err(CreationError::NoAvailablePixelFormat(String::from("num_configs == 0")));
     }
 
     let mut config_ids = Vec::with_capacity(num_configs as usize);
@@ -1331,11 +1331,11 @@ where
         .collect::<Vec<_>>();
 
     if config_ids.is_empty() {
-        return Err(CreationError::NoAvailablePixelFormat);
+        return Err(CreationError::NoAvailablePixelFormat(String::from("config_ids empty")));
     }
 
     let config_id = config_selector(config_ids, display)
-        .map_err(|_| CreationError::NoAvailablePixelFormat)?;
+        .map_err(|_| CreationError::NoAvailablePixelFormat(String::from("config_id err")))?;
 
     // analyzing each config
     macro_rules! attrib {
