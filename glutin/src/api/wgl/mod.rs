@@ -120,7 +120,7 @@ impl Context {
                     hdc,
                     pf_reqs,
                 )
-                .map_err(|_| CreationError::NoAvailablePixelFormat(String::from("pixel_format_id == 0 id err")))?
+                .map_err(|e| CreationError::NoAvailablePixelFormat(format!("pixel_format_id == 0 id err: {}", e)))?
             } else {
                 choose_native_pixel_format_id(hdc, pf_reqs)
                     .map_err(|_| CreationError::NoAvailablePixelFormat(String::from("choose_native_pixel_format_id err")))?
@@ -627,7 +627,7 @@ unsafe fn choose_arb_pixel_format_id(
     extensions: &str,
     hdc: HDC,
     pf_reqs: &PixelFormatRequirements,
-) -> Result<raw::c_int, ()> {
+) -> Result<raw::c_int, &'static str> {
     let descriptor = {
         let mut out: Vec<raw::c_int> = Vec::with_capacity(37);
 
@@ -646,7 +646,7 @@ unsafe fn choose_arb_pixel_format_id(
             {
                 out.push(gl::wgl_extra::TYPE_RGBA_FLOAT_ARB as raw::c_int);
             } else {
-                return Err(());
+                return Err("no WGL_ARB_pixel_format_float");
             }
         } else {
             out.push(gl::wgl_extra::TYPE_RGBA_ARB as raw::c_int);
@@ -698,7 +698,7 @@ unsafe fn choose_arb_pixel_format_id(
                 out.push(gl::wgl_extra::SAMPLES_ARB as raw::c_int);
                 out.push(multisampling as raw::c_int);
             } else {
-                return Err(());
+                return Err("no WGL_ARB_multisample");
             }
         }
 
@@ -722,7 +722,7 @@ unsafe fn choose_arb_pixel_format_id(
             out.push(gl::wgl_extra::FRAMEBUFFER_SRGB_CAPABLE_EXT as raw::c_int);
             out.push(pf_reqs.srgb as raw::c_int);
         } else if pf_reqs.srgb {
-            return Err(());
+            return Err("no WGL_ARB_framebuffer_sRGB nor WGL_EXT_framebuffer_sRGB");
         }
 
         match pf_reqs.release_behavior {
@@ -760,11 +760,11 @@ unsafe fn choose_arb_pixel_format_id(
         &mut num_formats,
     ) == 0
     {
-        return Err(());
+        return Err("ChoosePixelFormatARB failed");
     }
 
     if num_formats == 0 {
-        return Err(());
+        return Err("num_formats == 0");
     }
 
     Ok(format_id)
