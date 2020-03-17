@@ -359,12 +359,16 @@ unsafe fn create_context(
                         gl::wgl_extra::CONTEXT_PROFILE_MASK_ARB as raw::c_int,
                     );
                     attributes.push(flag as raw::c_int);
-                } else {
-                    return Err(CreationError::NotSupported(
-                        "required extension \"WGL_ARB_create_context_profile\" not found".to_string(),
-                    ));
+                } else if let Some((major, minor)) = opengl.version.to_gl_version() {
+                    if major >= 3 && minor >= 2 {
+                        return Err(CreationError::NotSupported(
+                            "required extension \"WGL_ARB_create_context_profile\" not found".to_string(),
+                        ));
+                    }
                 }
             }
+
+
 
             let flags = {
                 let mut flags = 0;
