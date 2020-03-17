@@ -277,10 +277,10 @@ unsafe fn create_context(
     if let Some((extra_functions, _pf_reqs, opengl, extensions)) = extra {
         share = opengl.sharing.unwrap_or(std::ptr::null_mut());
 
-        if extensions
+        if false/*extensions
             .split(' ')
             .find(|&i| i == "WGL_ARB_create_context")
-            .is_some()
+            .is_some()*/
         {
             let mut attributes = Vec::new();
 
