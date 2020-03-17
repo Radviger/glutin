@@ -1156,7 +1156,7 @@ where
         match (api, version) {
             (Api::OpenGlEs, Some((3, _))) => {
                 if egl_version < &(1, 3) {
-                    return Err(CreationError::NoAvailablePixelFormat(format!("3. es egl version {} < 1.3", egl_version)));
+                    return Err(CreationError::NoAvailablePixelFormat(format!("3. es egl version {:?} < 1.3", egl_version)));
                 }
                 out.push(ffi::egl::RENDERABLE_TYPE as raw::c_int);
                 out.push(ffi::egl::OPENGL_ES3_BIT as raw::c_int);
@@ -1165,7 +1165,7 @@ where
             }
             (Api::OpenGlEs, Some((2, _))) => {
                 if egl_version < &(1, 3) {
-                    return Err(CreationError::NoAvailablePixelFormat(format!("2. es egl version {} < 1.3", egl_version)));
+                    return Err(CreationError::NoAvailablePixelFormat(format!("2. es egl version {:?} < 1.3", egl_version)));
                 }
                 out.push(ffi::egl::RENDERABLE_TYPE as raw::c_int);
                 out.push(ffi::egl::OPENGL_ES2_BIT as raw::c_int);
@@ -1183,7 +1183,7 @@ where
             (Api::OpenGlEs, _) => unimplemented!(),
             (Api::OpenGl, _) => {
                 if egl_version < &(1, 3) {
-                    return Err(CreationError::NoAvailablePixelFormat(format!("gl egl version {} < 1.3", egl_version)));
+                    return Err(CreationError::NoAvailablePixelFormat(format!("gl egl version {:?} < 1.3", egl_version)));
                 }
                 out.push(ffi::egl::RENDERABLE_TYPE as raw::c_int);
                 out.push(ffi::egl::OPENGL_BIT as raw::c_int);
