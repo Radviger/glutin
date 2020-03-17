@@ -1160,7 +1160,7 @@ where
                 }
                 out.push(ffi::egl::RENDERABLE_TYPE as raw::c_int);
                 out.push(ffi::egl::OPENGL_ES3_BIT as raw::c_int);
-                out.push(ffi::egl::CONFORMANT as raw::c_int);Couldn't
+                out.push(ffi::egl::CONFORMANT as raw::c_int);
                 out.push(ffi::egl::OPENGL_ES3_BIT as raw::c_int);
             }
             (Api::OpenGlEs, Some((2, _))) => {
